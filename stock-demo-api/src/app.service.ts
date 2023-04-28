@@ -36,11 +36,18 @@ export class AppService {
       .get(`${baseUrl}${databaseCode}/${datasetCode}/data.${returnFormat}?api_key=${apiKey}`)
       .pipe(
         map((res) => {
-          const index = res.data.dataset_data.column_names.indexOf("Close")
-          return{index, data: res.data.dataset_data.data}
+          const indexDate = res.data.dataset_data.column_names.indexOf("Date");
+          const indexClose = res.data.dataset_data.column_names.indexOf("Close");
+          return{ indexDate, indexClose, data: res.data.dataset_data.data };
         }),
-        map(({index, data}) => data.map(instance => instance[index]))
-      )
+        map(({ indexDate, indexClose, data }) => 
+          data.map((instance) => {
+            return {
+              date: instance[indexDate],
+              close: instance[indexClose]
+            }
+          })
+      ))
       .pipe(
         catchError((err) => {
           throw new HttpException(`Forbidden: API not available ${err}`, HttpStatus.FORBIDDEN);

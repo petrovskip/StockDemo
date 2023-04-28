@@ -11,9 +11,21 @@ function LineChart( { chartData }: ILineChart) {
   return (
     <>
     {chartData &&
-    <div className="chart-container">
+    <div className="chart-container" style={{position: 'relative', height:'80vh', width:'100vw'}}>
       <Line
         data={chartData}
+        options={{
+          plugins: {
+            title: {
+              display: false
+            },
+            legend: {
+              display: true
+            }
+          },
+          responsive: true
+        }}
+        
         redraw={redraw}
       />
     </div>
